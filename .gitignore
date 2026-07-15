@@ -1,0 +1,34 @@
+# 二进制/大文件
+*.pyc
+*.pyo
+*.so
+*.dll
+*.exe
+
+# 压缩包
+*.zip
+*.zip*
+*.tar
+*.tar.gz
+*.tar.gz*
+*.tgz
+*.tgz*
+*.rar
+*.7z
+
+# 日志
+*.log
+
+# 模型/数据文件
+*.pkl
+*.pth
+*.h5
+*.hdf5
+*.jsonl
+
+# 上传/备份/缓存
+uploads/
+backups/
+__pycache__/
+.cache/
+ckpt/

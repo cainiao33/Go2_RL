@@ -1,0 +1,60 @@
+# -*- coding: UTF-8 -*-
+###########################################################################
+# Copyright © 1998 - 2026 Tencent. All Rights Reserved.
+###########################################################################
+"""
+CriticObservationProcess — custom critic observation processor.
+CriticObservationProcess — 自定义 critic 观测处理器。
+
+critic obs layout: [critic_proprio(60) | height_scan(256)] → 316 dim
+critic 观测布局：[critic_proprio(60) | height_scan(256)] → 316 维
+
+When extending to track terrain, please refer to the extension guide in
+policy_observation_process.py; the critic observation must stay in sync
+with the policy on the task-information convention.
+扩展到 track 地形时，请参考 policy_observation_process.py 的扩展指引；
+critic 观测需保持与 policy 同步的任务信息约定。
+"""
+
+from tools.base_env.observation_process import ObservationProcess
+from agent_ppo.conf.conf import Config
+from agent_ppo.feature.nav_command import apply_track_nav_command_to_critic_obs
+
+
+class CriticObservationProcess(ObservationProcess):
+    """Critic observation processor with optional goal obs.
+
+    与 policy 观测保持同步的 critic 观测处理器，可选拼接 goal obs。
+
+    Stage1 (standard): critic_proprio(60) + height_scan(256) = 316 dim
+    Stage2 (track):     critic_proprio(60) + height_scan(256) + goal(4) = 320 dim
+    """
+
+    target_group = "critic"
+
+    def process(self):
+        """Compute critic observation.
+
+        计算 critic 观测。
+
+        Standard: critic_obs = 316 dim
+        Track:    critic_obs = 316 + 4 (goal) = 320 dim
+        """
+        obs = self.default_observation()
+
+        # Track 地形下拼接与 policy 相同的目标点特征
+        if self._get_num_goal_obs() > 0:
+            goal_obs = self.goal_position_in_robot_frame()
+            obs = self.concatenate_terms(obs, goal_obs)
+
+        # Keep reward command_manager synchronized with the policy-side
+        # goal-directed command.  Do not mutate critic slices because privileged
+        # obs command indices may differ across platform versions.
+        obs = apply_track_nav_command_to_critic_obs(
+            obs,
+            getattr(self, "env", getattr(self, "_env", None)),
+            stage=Config.CURRENT,
+            logger=getattr(self, "logger", None),
+        )
+
+        return obs
