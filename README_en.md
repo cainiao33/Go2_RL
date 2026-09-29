@@ -1,8 +1,8 @@
 # Go2 Quadruped Reinforcement Learning: Autonomous Navigation + Locomotion
 
 <p align="center">
-  <a href="README.md"><img src="https://img.shields.io/badge/🇨🇳_语言-中文-red?style=for-the-badge" alt="中文"></a>
-  <a href="README_en.md"><img src="https://img.shields.io/badge/🇬🇧_Language-English-blue?style=for-the-badge" alt="English"></a>
+  <a href="README.md"><img src="https://img.shields.io/badge/Switch_Language-简体中文-red?style=for-the-badge" alt="简体中文"></a>
+  <a href="README_en.md"><img src="https://img.shields.io/badge/Switch_Language-English-blue?style=for-the-badge" alt="English"></a>
 </p>
 
 > **One-liner**: training a Unitree Go2 (12 actuated joints) with PPO (reward engineering deeply aligned with the scoring formula + staged curriculum learning) to walk stably over slopes, stairs, mazes and race tracks, and navigate autonomously to goal points.

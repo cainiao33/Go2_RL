@@ -1,8 +1,8 @@
 # Go2 四足机器人强化学习：自主导航 + 运动控制
 
 <p align="center">
-  <a href="README.md"><img src="https://img.shields.io/badge/🇨🇳_语言-中文-red?style=for-the-badge" alt="中文"></a>
-  <a href="README_en.md"><img src="https://img.shields.io/badge/🇬🇧_Language-English-blue?style=for-the-badge" alt="English"></a>
+  <a href="README.md"><img src="https://img.shields.io/badge/切换语言-简体中文-red?style=for-the-badge" alt="简体中文"></a>
+  <a href="README_en.md"><img src="https://img.shields.io/badge/切换语言-English-blue?style=for-the-badge" alt="English"></a>
 </p>
 
 > **一句话**：用 PPO（奖励工程深度对齐评分公式 + 分阶段课程学习）训练 Unitree Go2（12 可控关节）在坡面、楼梯、迷宫、赛道上稳定行走并自主导航至目标点
