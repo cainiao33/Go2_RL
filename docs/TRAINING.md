@@ -151,8 +151,8 @@ sub_terrains = ["pyramid_slope", "pyramid_slope_inv", "pyramid_stairs", "pyramid
 ```
 前置：Phase 1 的模型作为预训练
 目标：Track 完成率 > 60%
-配置：track 模式, 加入 goal obs, 加入导航 reward
-重点：goal_direction + reach_goal + navigation_progress
+配置：track 模式, 命令注入层（观测维度保持 301/316）, 加入导航 reward
+重点：goal_direction + reach_goal + approach_goal / navigation_time
 验证：completed_count / total, time_score
 ```
 
@@ -242,4 +242,4 @@ safe_std = torch.nan_to_num(std.data, nan=1.0, posinf=1.0e6, neginf=0.0)
 std.data.copy_(torch.clamp(safe_std, min=min_std, max=1.0e6))
 ```
 
-训练过程中**从未因数值问题导致崩溃**。
+参赛训练全程**未发生数值崩溃**（训练期观察结论；日志未随仓库存档）。

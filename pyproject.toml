@@ -1,0 +1,15 @@
+# 本文件仅作工具配置载体（ruff / pytest）。
+# 本仓库是腾讯开悟平台的参赛代码包，不是可安装的 Python 库——运行依赖
+# （kaiwudrl / common_python / tools.* / Isaac Lab）仅平台侧提供，本地 pip
+# 装不到，因此故意不声明 [project] 依赖，避免误导“本地可跑”。
+# CI 见 .github/workflows/ci.yml（零依赖门 + torch-CPU 门两档）。
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+# 只查语法级错误与未定义名——平台模板代码的风格问题不在本仓库治理范围
+select = ["E9", "F821"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

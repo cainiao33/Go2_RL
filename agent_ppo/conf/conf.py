@@ -118,7 +118,8 @@ class TrackConfig(StageConfig):
     name = "navigation"
     task_type = "track"
 
-    # Track 模式下额外拼接 4 维 goal 特征（goal_local_x, goal_local_y, dist, yaw）
+    # 命令注入路线：不拼接 goal 特征——导航信息经 nav_command 改写 obs[:, 6:9]
+    # 注入（见 feature_layout.py VELOCITY_COMMANDS），观测维度与 Standard 一致
     num_goal_obs = 0
     # policy obs = proprio(45) + scan(256) = 301
     # critic obs = critic_proprio(60) + scan(256) = 316

@@ -75,26 +75,29 @@
 │   │   └── train_workflow.py    # 训练工作流
 │   └── tool/
 │       └── scan.py              # 静态扫描工具（foot keyword 扫描）
-├── agent_diy/                   # DIY 算法模板（供选手自行开发）
-│   ├── agent.py                 # 智能体入口（与 agent_ppo 结构相同）
-│   ├── algorithm/
-│   │   └── algorithm.py         # PPO 算法（复制自 agent_ppo）
-│   ├── model/
-│   │   └── actor_critic.py      # Actor-Critic 网络（复制自 agent_ppo）
-│   ├── feature/                   # 特征处理（与 agent_ppo 类似）
-│   ├── conf/                    # 配置（与 agent_ppo 类似）
-│   └── workflow/
-│       └── train_workflow.py    # 训练工作流（复制自 agent_ppo）
-├── isaac_env/                   # 环境占位目录（空，环境由框架提供）
+├── agent_diy/                   # [diy] 算法槽位（框架别名，转发 agent_ppo）
+│   ├── agent.py                 # 入口（与 agent_ppo/agent.py 字节相同，import agent_ppo.*）
+│   ├── workflow/
+│   │   └── train_workflow.py    # 工作流（同上，字节相同转发）
+│   └── README.md                # 槽位说明 + 死代码清理记录（2026-09-29）
+├── isaac_env/                   # 环境占位目录（仅含空 __init__.py，环境由框架提供）
+├── tests/                       # 本地静态测试（平台无关；CI 两档运行）
+├── pyproject.toml               # 工具配置（ruff/pytest；不声明可安装依赖）
+├── .github/workflows/ci.yml     # CI：静态门 + torch-CPU 门
 ├── docs/                        # 项目文档（中文）
-│   ├── 开发指南/                # 开发指南
-│   ├── 腾讯开悟强化学习框架/      # 框架文档
+│   ├── TECH_OVERVIEW.md         # 技术方案总览
+│   ├── REWARD_ENGINEERING.md    # 奖励工程详解
+│   ├── NAVIGATION.md            # 导航策略设计
+│   ├── TRAINING.md              # 训练策略与课程学习
+│   ├── CODE_STRUCTURE.md        # 代码结构说明
+│   ├── 开发指南/                # 开发指南（平台文档）
+│   ├── 腾讯开悟强化学习框架/      # 框架文档（平台文档）
 │   ├── 适配方案/                # 适配方案与审查建议
 │   ├── 分布式计算框架.md          # KaiwuDRL 架构说明
 │   ├── 强化学习系列系统技术标准.md # 技术标准
 │   └── 其他工具/                # 日志与监控等
 └── .vscode/
-    └── launch.json              # VS Code 调试配置
+    └── launch.json              # VS Code 调试配置（python 路径为平台容器内路径）
 ```
 
 ---
@@ -174,9 +177,11 @@
 algorithm_name = "ppo"   # 或 "diy"
 ```
 
+> 注意：`"diy"` 槽位的入口文件是 `agent_ppo` 的字节级转发副本（import 全部来自 `agent_ppo.*`），两个算法名运行的是**同一套代码**（详见 `agent_diy/README.md`）。
+
 ### 5.2 切换训练阶段
 
-编辑 `agent_ppo/conf/conf.py`（或 `agent_diy/conf/conf.py`）：
+编辑 `agent_ppo/conf/conf.py`（唯一生效位置；`agent_diy` 已无 conf——其槽位转发 `agent_ppo`）：
 
 ```python
 class Config:
@@ -211,11 +216,12 @@ class Config:
 
 ### 6.1 环境要求
 
-- Conda 环境：`env_isaaclab`
-- Python 路径：`/opt/conda/envs/env_isaaclab/bin/python`
+- Conda 环境：`env_isaaclab`（**平台客户端镜像内**的环境——`/opt/conda/envs/env_isaaclab/bin/python` 是平台容器路径，本机不存在）
 - 需要 NVIDIA GPU（CUDA）
 
-### 6.2 本地训练/测试
+### 6.2 平台客户端内训练/测试
+
+> ⚠️ `train_test.py` 依赖 `kaiwudrl` 等平台模块（仅平台侧提供，见 §13），离开腾讯开悟平台客户端在任何机器上都无法运行；本地能做的验证见 §7 与 `tests/`。
 
 ```bash
 # 激活环境
@@ -236,11 +242,25 @@ python train_test.py
 
 ---
 
-## 7. 测试策略
+## 7. 测试与验证策略
 
-本项目**无传统单元测试框架**。测试主要通过以下方式：
+### 7.1 本地静态测试（`tests/`，2026-09-29 新增）
 
-1. **训练测试（train_test）**：运行 `train_test.py` 验证训练流程是否通畅
+平台无关的 ABI / 配置断言，`pytest tests` 即可运行（CI 两档：零依赖门 + torch-CPU 门，见 `.github/workflows/ci.yml`）：
+
+| 文件 | 覆盖 |
+|------|------|
+| `tests/test_layout.py` | 观测布局 301/316 ABI、slice 连续性、命令注入片 `obs[:,6:9]` |
+| `tests/test_agent_diy_slot.py` | agent_diy 转发槽位契约（文件清单 / 字节相同 / algo_conf 映射 / 全仓无 agent_diy import） |
+| `tests/test_configs.py` | 5 个 TOML + `kaiwu.json` 解析与关键值（mode / num_envs / `[app]` 默认） |
+| `tests/test_conf_module.py` | `agent_ppo.conf.conf` 模块断言（CURRENT=Track、观测维度、避障默认关闭） |
+| `tests/test_actor_critic.py` | ActorCritic 前向形状 / 参数量 647,833 / LayerNorm（torch CPU） |
+
+注意：`agent_ppo/feature/__init__.py` 会急切 import 观测处理（依赖平台 `tools.*`），本地 `import agent_ppo.feature.*` 必然失败；`feature_layout.py` 的测试因此按文件路径加载。
+
+### 7.2 平台侧验证
+
+1. **训练测试（train_test）**：平台内运行 `train_test.py`（`algorithm_name` 分别取 `"ppo"` 与 `"diy"` 各验一次）验证训练流程通畅
 2. **配置校验**：`tools.train_env_conf_validate.check_usr_conf()` 在 Agent 初始化时自动校验 TOML 配置合法性
 3. **评估任务**：在腾讯开悟平台创建评估任务，验证模型性能
 4. **监控指标**：通过 `monitor_builder.py` 配置的监控面板观察训练指标
@@ -251,7 +271,7 @@ python train_test.py
 
 ### 8.1 文件头模板
 
-所有 Python 文件使用统一头：
+平台模板文件（现行 18/34 个 py，含 agent_diy 4 个转发副本）带如下 Tencent 头；自研文件（`nav_command.py`、`nav_signal.py`、`tool/scan.py` 等）**不带**该头，新增自研文件不要求添加。注意：`feature_layout.py` / `track_tensor_bridge.py` 为在 Tencent 模板上深度修改的文件，**保留**腾讯头（与 README「出处与许可」一致）：
 
 ```python
 #!/usr/bin/env python3
@@ -344,6 +364,7 @@ Author: Tencent AI Arena Authors
 
 ### 11.1 腾讯开悟平台
 
+- **平台为申请制**：需在腾讯开悟（Tencent AI Arena）官网（<https://aiarena.tencent.com/>）注册申请，通过审核后才能获得平台训练/评估资源与代码包上传权限
 - 代码包通过平台上传/提交
 - 模型文件（`.pkl`）由框架自动打包到 zip 中
 - 评估任务由平台官方实现，调用 `agent.exploit()`
@@ -387,7 +408,7 @@ Author: Tencent AI Arena Authors
 - `tools.train_env_conf_validate.check_usr_conf`
 - `tools.utils.load_reward_keys_from_monitor_config`
 
-**注意**：这些模块在本地开发环境中可能不可用，需在腾讯开悟平台/客户端中运行。
+**注意**：这些模块在本地环境中**必然不可得**——它们仅存在于腾讯开悟平台/客户端（申请制，见 §11.1）的运行环境中，pip 无法安装。任何 import 平台模块的代码（`train_test.py` 入口、agent、workflow、definition、obs/reward 处理等）只能平台侧运行；本地可验证的部分见 §7 `tests/`。
 
 ---
 

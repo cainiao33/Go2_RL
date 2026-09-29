@@ -78,7 +78,8 @@ def compute_track_nav_command(env, obs, stage):
 | `nav_cmd_yaw_gain` | 1.35 | 偏航角增益 |
 | `nav_cmd_max_yaw` | 0.95 | 最大偏航角速度 |
 | `nav_cmd_goal_slow_radius` | 0.80 | 接近目标减速半径 |
-| `nav_cmd_enable_scanner_avoidance` | True | 启用扫描避障 |
+| `nav_cmd_fail_fast` | False | 桥接失效时保底不快速失败 |
+| `nav_cmd_enable_scanner_avoidance` | False | 启用扫描避障（**最终配置默认关闭**，开启改 `agent_ppo/conf/conf.py`） |
 | `nav_cmd_scanner_max_m` | 2.5 | 扫描最大距离 |
 | `nav_cmd_min_valid_ray_ratio` | 0.05 | 最小有效射线比例 |
 | `nav_cmd_front_block_m` | 0.55 | 前方障碍物阈值 |
@@ -88,6 +89,8 @@ def compute_track_nav_command(env, obs, stage):
 ---
 
 ## 避障扫描器集成
+
+> 状态说明：以下链路已完整实现并集成于命令注入层；**最终提交配置中 `nav_cmd_enable_scanner_avoidance = False`（默认关闭**，见 `agent_ppo/conf/conf.py`），开启后生效。
 
 ### nav_scanner 数据流
 
@@ -166,23 +169,17 @@ yaw_err = atan2(dy_b, dx_b)
 
 ---
 
-## Track 模式观测扩展
+## Track 模式观测（命令注入，不扩维）
 
-### Policy Obs（305维）
+**观测维度与 Standard 完全一致：Policy 301 / Critic 316**（`num_goal_obs = 0`）。导航信息不拼接进观测，而是由 `nav_command.py` 计算速度命令后**覆写既有观测切片**：
 
 ```
-obs = [proprio(45) | height_scan(256) | goal(4)]
-                              ↓
-goal(4) = [goal_local_x, goal_local_y, dist, yaw_err]
+obs = [proprio(45) | height_scan(256)]        # 维度不变（301）
+              ↓ nav_command 注入
+obs[:, 6:9] = [vx, vy, wz]                    # 覆写速度命令片（feature_layout.py 的 VELOCITY_COMMANDS）
 ```
 
-- `goal_local_x, goal_local_y`：目标在机器人坐标系下的相对位置
-- `dist`：到目标的欧氏距离
-- `yaw_err`：目标方向与机器人朝向的夹角
-
-### Critic Obs（320维）
-
-与 policy 保持同步，同样拼接 goal(4) 特征。
+> 历史备注：早期实验路线曾把 goal(4) 拼接进观测（policy 305 / critic 320），因破坏 301 维 ABI、无法复用 Standard checkpoint 而被否弃；相关死代码已于 2026-09-29 清理（完整存档于 git 初始提交 `a3ff697`）。
 
 ---
 
@@ -217,13 +214,14 @@ def _is_observation_shape_probe():
 class TrackConfig(StageConfig):
     name = "navigation"
     task_type = "track"
-    
-    # 观测维度
-    num_goal_obs = 4
-    num_critic_observations = 320
-    
+
+    # 观测维度（命令注入路线：不拼接 goal，与 Standard 一致）
+    num_goal_obs = 0
+    num_critic_observations = 316
+
     # 导航命令注入
     enable_track_nav_command = True
+    nav_cmd_fail_fast = False
     nav_cmd_target_speed = 0.80
     nav_cmd_min_speed = 0.18
     nav_cmd_max_speed = 1.10
@@ -231,7 +229,7 @@ class TrackConfig(StageConfig):
     nav_cmd_yaw_gain = 1.35
     nav_cmd_max_yaw = 0.95
     nav_cmd_goal_slow_radius = 0.80
-    nav_cmd_enable_scanner_avoidance = True
+    nav_cmd_enable_scanner_avoidance = False
     
     # 保守微调
     lr = 1e-4

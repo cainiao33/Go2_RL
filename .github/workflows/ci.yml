@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  static:
+    # 零依赖门：语法编译 / lint / 配置解析 / 槽位与布局契约（torch 用例自动跳过）
+    name: 静态门（compileall + ruff + 配置解析）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install ruff pytest
+      - run: ruff check .
+      - run: python -m compileall -q agent_ppo agent_diy isaac_env tests train_test.py
+      - run: python -m pytest tests -q
+
+  torch-cpu:
+    # torch-CPU 门：平台无关模块（actor_critic / conf / 布局 ABI）的单测
+    # kaiwudrl / common_python / tools.* 仅平台侧提供，不可能在 CI 覆盖
+    name: torch-CPU 门（模型前向 + 配置模块）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - run: pip install toml pytest
+      - run: python -m pytest tests -q

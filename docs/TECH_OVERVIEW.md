@@ -39,7 +39,7 @@
 | 阶段 | 目标 | 时间占比 | 核心工作 |
 |------|------|----------|----------|
 | **Phase 1** | Standard 全地形通过率 > 80% | 40% | PPO baseline + 奖励工程 + 课程学习 |
-| **Phase 2** | Track 完成率 > 60% | 30% | 加入目标点观测 + 导航奖励 + 命令注入层 |
+| **Phase 2** | Track 完成率 > 60% | 30% | 命令注入层导航（观测维度不变）+ 导航奖励 |
 | **Phase 3** | 提升泛化能力 | 20% | 尝试 CTS 蒸馏或 history buffer |
 | **Phase 4** | 精调能耗/姿态 | 10% | 降低域随机化强度，收敛优雅步态 |
 
@@ -68,11 +68,11 @@ Critic (Value):
 | 模式 | Policy Obs | Critic Obs | 说明 |
 |------|-----------|-----------|------|
 | Standard | 301 = 45 + 256 | 316 = 60 + 256 | proprio + height_scan |
-| Track | 305 = 45 + 256 + 4 | 320 = 60 + 256 + 4 | + goal 特征 |
+| Track | 301 = 45 + 256 | 316 = 60 + 256 | 与 Standard 一致；导航经命令注入（见下） |
 
 - **proprio(45)**：关节位置、速度、IMU 姿态、速度命令等本体感知
 - **height_scan(256)**：16×16 前方地面高度扫描
-- **goal(4)**：Track 模式下目标点相对位置（local_x, local_y, dist, yaw）
+- Track 导航**不拼接 goal 特征**（`num_goal_obs = 0`）：`nav_command.py` 计算速度命令后改写 `obs[:, 6:9]`（`feature_layout.py` 的 `VELOCITY_COMMANDS` 切片），保持 301 维 ABI 以复用 Standard checkpoint；早期 goal 拼接方案（305/320）已否弃并清理
 
 ---
 
@@ -83,11 +83,11 @@ Critic (Value):
 | `clip_param` | 0.2 | PPO 裁剪参数 |
 | `gamma` | 0.99 | 折扣因子 |
 | `lam` | 0.95 | GAE lambda |
-| `lr` | 1e-3 → adaptive | 自适应学习率（基于 KL 散度） |
+| `lr` | 3e-4（Standard）/ 1e-4（Track）→ adaptive | 初始值来自 StageConfig，运行时按 KL 自适应（AlgorithmPPO 构造默认 1e-3，但 agent.py 传入 `stage.lr`） |
 | `num_learning_epochs` | 5 | 每次更新 epoch 数 |
-| `num_mini_batches` | 4 | mini-batch 数量 |
+| `num_mini_batches` | 4（Standard）/ 8（Track） | mini-batch 数量（StageConfig） |
 | `desired_kl` | 0.01 | 目标 KL 散度 |
-| `entropy_coef` | 0.01 | 熵奖励系数 |
+| `entropy_coef` | 0.02 | 熵奖励系数（`agent.py` 显式传入；AlgorithmPPO 构造默认 0.01） |
 | `max_grad_norm` | 1.0 | 梯度裁剪最大范数 |
 
 ### 自适应学习率
