@@ -1,5 +1,10 @@
 # Go2 四足机器人强化学习：自主导航 + 运动控制
 
+<p align="center">
+  <a href="README.md"><img src="https://img.shields.io/badge/🇨🇳_语言-中文-red?style=for-the-badge" alt="中文"></a>
+  <a href="README_en.md"><img src="https://img.shields.io/badge/🇬🇧_Language-English-blue?style=for-the-badge" alt="English"></a>
+</p>
+
 > **一句话**：用 PPO（奖励工程深度对齐评分公式 + 分阶段课程学习）训练 Unitree Go2（12 可控关节）在坡面、楼梯、迷宫、赛道上稳定行走并自主导航至目标点
 > **成绩**：2026 腾讯开悟人工智能全球公开赛 D02 — 中部区域初赛**第 2** · 区域决赛第 5 · 全国决赛**二等奖**
 > **怎么跑**：须在**腾讯开悟强化学习平台**（申请制）内训练（Isaac Lab 仿真与 KaiwuDRL 框架由平台提供，无法本地独立运行）；同平台参赛者入口 `python train_test.py`（Standard / Track 模式切换见 `agent_ppo/conf/conf.py` 的 `Config.CURRENT`），流程详见 [docs/TRAINING.md](docs/TRAINING.md)
@@ -128,7 +133,7 @@ pytest tests
 ---
 
 > **作者**: cainiao33
-> 
+>
 > **仓库**: https://github.com/cainiao33/Go2_RL
 >
 > **平台**: [腾讯开悟（Tencent AI Arena）](https://aiarena.tencent.com/)（申请制）
