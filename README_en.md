@@ -5,8 +5,10 @@
   <a href="README_en.md"><img src="https://img.shields.io/badge/Switch_Language-English-blue?style=for-the-badge" alt="English"></a>
 </p>
 
-> **One-liner**: training a Unitree Go2 (12 actuated joints) with PPO (reward engineering deeply aligned with the scoring formula + staged curriculum learning) to walk stably over slopes, stairs, mazes and race tracks, and navigate autonomously to goal points.
+> **Overview**: training a Unitree Go2 (12 actuated joints) with PPO (reward engineering deeply aligned with the scoring formula + staged curriculum learning) to walk stably over slopes, stairs, mazes and race tracks, and navigate autonomously to goal points.
+>
 > **Results**: 2026 Tencent AI Arena Global Open Competition D02 — **2nd** in the Central Regional Preliminary · 5th in the Regional Final · **Second Prize** in the National Final.
+>
 > **How to run**: training must happen inside the **Tencent AI Arena RL platform** (application required; Isaac Lab simulation and the KaiwuDRL framework are provided platform-side and cannot run locally). Fellow platform entrants: `python train_test.py` (Standard / Track mode switching via `Config.CURRENT` in `agent_ppo/conf/conf.py`); full workflow in [docs/TRAINING.md](docs/TRAINING.md) (Chinese).
 
 ---
