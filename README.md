@@ -13,12 +13,14 @@
 
 ## 🎥 演示视频
 
-> 平台仿真内录制（Isaac Lab）。GIF 为自动循环播放的节选预览；完整时长、原生画质（1080×1080 MP4，每段约 25 MB）见 [Release v1.0](https://github.com/cainiao33/Go2_RL/releases/tag/v1.0)，不随仓库分发。
+> 平台仿真内录制（Isaac Lab）。GIF 为自动循环播放的节选预览（左：[下楼梯专项优化](#5-下楼梯专项优化)演示；右：长楼梯 + 迷宫地形课程）；完整时长、原生画质（1080×1080 MP4，每段约 25 MB）见 [Release v1.0](https://github.com/cainiao33/Go2_RL/releases/tag/v1.0)，不随仓库分发。
 
-| [**下楼梯**（Standard 模式复杂地形，对应下楼梯专项优化）](#5-下楼梯专项优化) | **长楼梯 + 迷宫地形课程**（Standard 模式） |
-| :---: | :---: |
-| <img src="demo/go2_stair_descent.gif" alt="Go2 下楼梯演示（Isaac Lab 仿真，节选循环）" width="450"> | <img src="demo/go2_terrain_maze.gif" alt="Go2 长楼梯 + 迷宫地形课程演示（Isaac Lab 仿真，节选循环）" width="450"> |
-| 完整视频：[go2_stair_descent.mp4](https://github.com/cainiao33/Go2_RL/releases/download/v1.0/go2_stair_descent.mp4) | 完整视频：[go2_terrain_maze.mp4](https://github.com/cainiao33/Go2_RL/releases/download/v1.0/go2_terrain_maze.mp4) |
+<p align="center">
+  <img src="demo/go2_stair_descent.gif" alt="Go2 下楼梯演示（Isaac Lab 仿真，节选循环）" width="49%">
+  <img src="demo/go2_terrain_maze.gif" alt="Go2 长楼梯 + 迷宫地形课程演示（Isaac Lab 仿真，节选循环）" width="49%">
+</p>
+
+<p align="center"><sub>完整视频（1080×1080）：<a href="https://github.com/cainiao33/Go2_RL/releases/download/v1.0/go2_stair_descent.mp4">下楼梯 go2_stair_descent.mp4</a> ｜ <a href="https://github.com/cainiao33/Go2_RL/releases/download/v1.0/go2_terrain_maze.mp4">地形课程 go2_terrain_maze.mp4</a></sub></p>
 
 ---
 

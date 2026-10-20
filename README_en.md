@@ -13,12 +13,14 @@
 
 ## 🎥 Demo Videos
 
-> Recorded inside the platform simulation (Isaac Lab). The GIFs are auto-looping excerpt previews; full-length, native-quality videos (1080×1080 MP4, ~25 MB each) are on [Release v1.0](https://github.com/cainiao33/Go2_RL/releases/tag/v1.0), not distributed with the repo.
+> Recorded inside the platform simulation (Isaac Lab). The GIFs are auto-looping excerpt previews (left: [stair-descent specific optimization](#5-stair-descent-specific-optimization) demo; right: long-stairs + maze terrain course); full-length, native-quality videos (1080×1080 MP4, ~25 MB each) are on [Release v1.0](https://github.com/cainiao33/Go2_RL/releases/tag/v1.0), not distributed with the repo.
 
-| [**Stair descent** (Standard-mode complex terrain, see the stair-descent specific optimization)](#5-stair-descent-specific-optimization) | **Terrain course: long stairs + maze** (Standard mode) |
-| :---: | :---: |
-| <img src="demo/go2_stair_descent.gif" alt="Go2 stair-descent demo (Isaac Lab sim, excerpt loop)" width="450"> | <img src="demo/go2_terrain_maze.gif" alt="Go2 long-stairs + maze terrain-course demo (Isaac Lab sim, excerpt loop)" width="450"> |
-| Full video: [go2_stair_descent.mp4](https://github.com/cainiao33/Go2_RL/releases/download/v1.0/go2_stair_descent.mp4) | Full video: [go2_terrain_maze.mp4](https://github.com/cainiao33/Go2_RL/releases/download/v1.0/go2_terrain_maze.mp4) |
+<p align="center">
+  <img src="demo/go2_stair_descent.gif" alt="Go2 stair-descent demo (Isaac Lab sim, excerpt loop)" width="49%">
+  <img src="demo/go2_terrain_maze.gif" alt="Go2 long-stairs + maze terrain-course demo (Isaac Lab sim, excerpt loop)" width="49%">
+</p>
+
+<p align="center"><sub>Full videos (1080×1080): <a href="https://github.com/cainiao33/Go2_RL/releases/download/v1.0/go2_stair_descent.mp4">stair descent — go2_stair_descent.mp4</a> | <a href="https://github.com/cainiao33/Go2_RL/releases/download/v1.0/go2_terrain_maze.mp4">terrain course — go2_terrain_maze.mp4</a></sub></p>
 
 ---
 
