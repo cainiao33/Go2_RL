@@ -11,6 +11,20 @@
 
 ---
 
+## 🎥 Demo Videos
+
+> Recorded inside the platform simulation (Isaac Lab). The files are large (~25 MB each) and hosted on [Release v1.0](https://github.com/cainiao33/Go2_RL/releases/tag/v1.0), not distributed with the repo.
+
+**Stair descent (Standard-mode terrain)** — see the [stair-descent specific optimization](#5-stair-descent-specific-optimization):
+
+<video src="https://github.com/cainiao33/Go2_RL/releases/download/v1.0/go2_stair_descent.mp4" controls width="100%"></video>
+
+**Terrain course: long stairs + maze (Standard mode)**:
+
+<video src="https://github.com/cainiao33/Go2_RL/releases/download/v1.0/go2_terrain_maze.mp4" controls width="100%"></video>
+
+---
+
 ## ⚠️ Reproduction Notes
 
 This repository **does not provide step-by-step off-platform reproduction**, because training and evaluation must take place inside the **Tencent AI Arena (Kaiwu) RL platform** (<https://aiarena.tencent.com/>) — the platform is **application-based**: you must register, apply, and pass review before use —

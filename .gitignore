@@ -5,6 +5,9 @@
 *.dll
 *.exe
 
+# 视频（大文件，经 GitHub Release 分发，不入库）
+*.mp4
+
 # 压缩包
 *.zip
 *.zip*

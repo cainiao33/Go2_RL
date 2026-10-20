@@ -11,6 +11,20 @@
 
 ---
 
+## 🎥 演示视频
+
+> 平台仿真内录制（Isaac Lab）。视频文件较大（每段约 25 MB），托管于 [Release v1.0](https://github.com/cainiao33/Go2_RL/releases/tag/v1.0)，不随仓库分发。
+
+**下楼梯（Standard 模式复杂地形）** —— 对应本仓库的[下楼梯专项优化](#5-下楼梯专项优化)：
+
+<video src="https://github.com/cainiao33/Go2_RL/releases/download/v1.0/go2_stair_descent.mp4" controls width="100%"></video>
+
+**复杂地形课程：长楼梯 + 迷宫（Standard 模式）**：
+
+<video src="https://github.com/cainiao33/Go2_RL/releases/download/v1.0/go2_terrain_maze.mp4" controls width="100%"></video>
+
+---
+
 ## ⚠️ 复现说明
 
 本仓库**不提供脱离平台的详细复现步骤**，原因：训练与评估必须在**腾讯开悟（Tencent AI Arena）强化学习平台**（<https://aiarena.tencent.com/>）内进行（平台为**申请制**：需注册申请并通过审核后方可使用）——
