@@ -7,7 +7,7 @@
 
 > **Overview**: training a Unitree Go2 (12 actuated joints) with PPO (reward engineering deeply aligned with the scoring formula + staged curriculum learning) to walk stably over slopes, stairs, mazes and race tracks, and navigate autonomously to goal points.
 >
-> **Results**: 2026 Tencent AI Arena Global Open Competition D02 — **2nd** in the Central Regional Preliminary · 5th in the Regional Final · **Second Prize** in the National Final.
+> **Results**: 2026 Tencent AI Arena Global Open Competition D02 — **Second Prize** (Central Region) · **Third Prize** in the National Final.
 >
 > **How to run**: training must happen inside the **Tencent AI Arena RL platform** (application required; Isaac Lab simulation and the KaiwuDRL framework are provided platform-side and cannot run locally). Fellow platform entrants: `python train_test.py` (Standard / Track mode switching via `Config.CURRENT` in `agent_ppo/conf/conf.py`); full workflow in [docs/TRAINING.md](docs/TRAINING.md) (Chinese).
 
@@ -139,11 +139,10 @@ Reward-engineering tuning and platform training were done by the author; reposit
 
 ## Competition Results
 
-| Stage | Rank | Notes |
+| Stage | Result | Notes |
 |------|------|------|
-| **Central Regional Preliminary** | **2nd** | Standard + Track combined |
-| **Regional Final** | **5th** | qualifiers from all regions |
-| **National Final** | **Second Prize** | final national ranking |
+| **Central Regional Competition** | **Second Prize** | Standard + Track combined |
+| **National Final** | **Third Prize** | final national ranking |
 
 ---
 
